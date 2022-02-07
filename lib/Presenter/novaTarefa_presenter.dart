@@ -1,15 +1,20 @@
 import 'package:app_todo/Model/Api/apiCadastroTodo.dart';
-import 'package:app_todo/Model/apitodo.dart';
+import 'package:app_todo/Model/Model_Geral.dart';
 import 'package:flutter/material.dart';
 
 class NovaTarefaPresenter extends ChangeNotifier {
-  final api = TodoApi();
+  final TodoApi api;
 
-  CadastroTodo? cadastroTodo;
+  NovaTarefaPresenter(this.api);
 
-  void obterLogin() async {
-    cadastroTodo = await api.registersTodo('titulo', 'descricao', 'cor');
-
-    notifyListeners();
+  void novaTarefa(
+      CadastroTodo todo, VoidCallback sucesso, VoidCallback falhou) {
+    api.registersTodo('titulo', 'descricao', 'cor').then((value) {
+      if (value != null) {
+        sucesso.call();
+      } else {
+        falhou.call();
+      }
+    });
   }
 }
