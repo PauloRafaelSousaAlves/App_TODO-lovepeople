@@ -243,7 +243,7 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
 void cadastroConcluido(context) {
   Navigator.of(context).push(
     MaterialPageRoute(
-      builder: (context) => PaginaCadastroConcluido(),
+      builder: (context) => CadastroConcluido(),
     ),
   );
 }

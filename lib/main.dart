@@ -1,6 +1,6 @@
+import 'package:app_todo/View/paginaLogin.dart';
+import 'package:app_todo/View/paginaTarefa.dart';
 import 'package:flutter/material.dart';
-
-import 'View/verificaçãoToken.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const VerificacaoToken(),
+      home: const ListaDeTarefas(),
     );
   }
 }

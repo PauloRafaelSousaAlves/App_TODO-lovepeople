@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_todo/View/paginaCadastro.dart';
 import 'package:app_todo/View/paginaTarefa.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -127,14 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 45,
                                   width: 110,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      // if (_formkey.currentState?.validate() ==
-                                      //     true) {
-                                      //   Navigator.of(context).pop(
-                                      //       _emailController.text,
-                                      //       _passowrdController.text);
-                                      // }
-                                    },
+                                    onPressed: () {},
                                     child: const Text(
                                       "Entrar",
                                       style: TextStyle(
@@ -210,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
 void paginaDaLista(context) {
   Navigator.of(context).push(
     MaterialPageRoute(
-      builder: (context) => PaginaTarefas(),
+      builder: (context) => ListaDeTarefas(),
     ),
   );
 }
@@ -218,7 +212,7 @@ void paginaDaLista(context) {
 void novoCadastro(context) {
   Navigator.of(context).push(
     MaterialPageRoute(
-      builder: (context) => PaginaTarefas(),
+      builder: (context) => CadastroUsuario(),
     ),
   );
 }
