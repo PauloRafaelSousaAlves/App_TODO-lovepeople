@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_todo/Presenter/login_presenter.dart';
 import 'package:app_todo/View/paginaCadastro.dart';
 import 'package:app_todo/View/paginaTarefa.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passowrdController = TextEditingController();
   final bool _enableObscure = true;
+
+  @override
+  void didChangeDependencies() {
+    context.read<LoginPresenter>().obterLogin('email', 'senha', () {}, () {});
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,20 +206,20 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
 
-void paginaDaLista(context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => ListaDeTarefas(),
-    ),
-  );
-}
+  void paginaDaLista(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ListaDeTarefas(),
+      ),
+    );
+  }
 
-void novoCadastro(context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => CadastroUsuario(),
-    ),
-  );
+  void novoCadastro(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CadastroUsuario(),
+      ),
+    );
+  }
 }
