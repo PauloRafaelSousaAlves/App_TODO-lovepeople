@@ -1,19 +1,21 @@
 import 'package:app_todo/Model/Api/apiLoginDeUsuario.dart';
 import 'package:app_todo/Model/Model_Geral.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPresenter extends ChangeNotifier {
-  final TodoApi api;
+  final api = TodoApi();
 
   LoginDeUsuario? logins;
   bool carregar = false;
 
-  LoginPresenter(this.api);
-
   void obterLogin(
       String email, String senha, VoidCallback sucesso, VoidCallback falhou) {
     carregamento(true);
-    api.login(email, senha).then((value) {
+    api.login(email, senha).then((value) async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString('jwt', value!.jwt!);
       if (value != null) {
       } else {
         falhou.call();
@@ -32,15 +34,13 @@ class LoginPresenter extends ChangeNotifier {
     });
   }
 
-  void verificacaoToken(VoidCallback autenticacao) {
-    carregamento(true);
-    api.getLogin().then((value) {
-      if (value != null) {
-        autenticacao();
-      }
-    }).whenComplete(() {
-      carregamento(false);
-    });
+  Future<bool> verificacaoToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString('jwt') != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

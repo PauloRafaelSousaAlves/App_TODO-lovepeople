@@ -1,40 +1,33 @@
 import 'package:app_todo/Model/Api/apiCadastroDeUsuario.dart';
+import 'package:app_todo/Model/Api/apiLoginDeUsuario.dart';
 import 'package:app_todo/Model/Model_Geral.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CadastroDeUsuario extends ChangeNotifier {
-  final TodoApi api;
+class CadastroDeUsuario2 extends ChangeNotifier {
+  final api = TodoApi();
 
-  CadastroDeUsuario? logins;
+  LoginDeUsuario? logins;
   bool carregar = false;
 
-  CadastroDeUsuario(this.api);
-
-  void obterLogin(String nome, String email, String senha, VoidCallback sucesso,
+  void obterLogin(String email, String senha, String nome, VoidCallback sucesso,
       VoidCallback falhou) {
-    carregamento(true);
-    api.register(nome, email, senha).then((value) {
-      if (value != null) {
-      } else {
-        falhou.call();
-      }
-    }).catchError((error) {
-      falhou.call();
-    }).whenComplete(() {
-      carregamento(false);
+    api.register(email, senha, nome).then((value) async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString('jwt', '${value?.jwt}');
+      sucesso();
+    }).onError((erro, _) {
+      falhou();
     });
   }
 
-  void carregamento(bool correto) {
-    postFrame(() {
-      carregar = true;
-      notifyListeners();
-    });
-  }
-
-  void postFrame(Function execute) {
-    Future.delayed(Duration.zero, () {
-      execute();
-    });
+  Future<bool> verificacaoToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString('jwt') != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
