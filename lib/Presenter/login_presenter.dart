@@ -16,14 +16,9 @@ class LoginPresenter extends ChangeNotifier {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       sharedPreferences.setString('jwt', value!.jwt!);
-      if (value != null) {
-      } else {
-        falhou.call();
-      }
-    }).catchError((error) {
-      falhou.call();
-    }).whenComplete(() {
-      carregamento(false);
+      sucesso();
+    }).onError((erro, _) {
+      falhou();
     });
   }
 
