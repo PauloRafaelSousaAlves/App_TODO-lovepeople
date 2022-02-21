@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'package:app_todo/Model/Api/apiCadastroDeUsuario.dart';
+import 'package:app_todo/Presenter/cadastro_presenter.dart';
 import 'package:app_todo/View/paginaCadastroConcluido.dart';
 import 'package:app_todo/View/paginaLogin.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +20,26 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmacaoController = TextEditingController();
-  final bool _enableObscure = true;
+  bool _enableObscure = true;
+
+  @override
+  void didChangeDependencies() {
+    context.read<CadastroDeUsuario2>().verificacaoToken().then((value) {
+      if (value) {
+        telaLogin(context);
+      }
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFA901F7),
-      body: Consumer(
-        builder: (context, controller, _) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: Consumer<CadastroDeUsuario2>(
+        builder: (context, controller, child) {
+          return ListView(
+            padding: const EdgeInsets.all(20),
             children: [
               const Text(
                 'Vamos começar!',
@@ -162,30 +176,59 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                                             height: 45,
                                             width: 130,
                                             child: ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text(
-                                                "Cadastrar",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                ),
-                                              ),
+                                              onPressed: () {
+                                                if (_formkey.currentState!
+                                                    .validate()) {
+                                                  controller.obterLogin(
+                                                    _emailController.text,
+                                                    _nomeController.text,
+                                                    _senhaController.text,
+                                                    () {
+                                                      cadastroConcluido(
+                                                          context);
+                                                    },
+                                                    () {
+                                                      const snackBar = SnackBar(
+                                                        backgroundColor:
+                                                            Color.fromARGB(251,
+                                                                143, 39, 32),
+                                                        content: Text(
+                                                            'Erro no Processo! Tente De novo'),
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                    },
+                                                  );
+                                                }
+                                              },
                                               style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
-                                                          Color(0xFF3101B9)),
+                                                          Color(0xff3101B9)),
                                                   shape: MaterialStateProperty
                                                       .all(RoundedRectangleBorder(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(15),
-                                                          side:
-                                                              const BorderSide(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  width: 1)))),
+                                                                  .circular(16),
+                                                          side: const BorderSide(
+                                                              width: 2,
+                                                              color: Colors
+                                                                  .white)))),
+                                              child: const Text(
+                                                'Cadastrar',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    height: 1.0),
+                                              ),
                                             ),
                                           ),
+                                        ),
+                                        const SizedBox(
+                                          height: 110,
                                         ),
                                       ],
                                     ),

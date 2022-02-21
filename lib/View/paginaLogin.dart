@@ -17,12 +17,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passowrdController = TextEditingController();
-  final bool _enableObscure = true;
+  final _passwordController = TextEditingController();
+  bool _enableObscure = true;
 
   @override
   void didChangeDependencies() {
-    context.read<LoginPresenter>().obterLogin('email', 'senha', () {}, () {});
+    context.read<LoginPresenter>().verificacaoToken().then((value) {
+      if (value) {
+        paginaDaLista(context);
+      }
+    });
     super.didChangeDependencies();
   }
 
@@ -30,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFA901F7),
-      body: Consumer(
-        builder: (context, controller, _) {
+      body: Consumer<LoginPresenter>(
+        builder: (context, controller, child) {
           return Column(
             children: [
               Container(
@@ -103,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                                 padding:
                                     const EdgeInsets.only(left: 0, right: 0),
                                 child: TextFormField(
-                                  controller: _passowrdController,
+                                  controller: _passwordController,
                                   validator: (value) {
                                     if (value == null ||
                                         value.trim().length == null) {
@@ -118,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(11)),
                                     ),
-                                    hintText: 'Passoword',
+                                    hintText: 'Password',
                                     hintStyle:
                                         TextStyle(color: Color(0xFFA901F7)),
                                     fillColor: Colors.white,
@@ -135,25 +139,43 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 45,
                                   width: 110,
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_formkey.currentState!.validate()) {
+                                        controller.obterLogin(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                          () {
+                                            paginaDaLista(context);
+                                          },
+                                          () {
+                                            const snackBar = SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                  'Usuário ou senhas inválidos'),
+                                            );
+
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          },
+                                        );
+                                      }
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color(0xff3101B9)),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                side: const BorderSide(
+                                                    width: 1.5,
+                                                    color: Colors.white)))),
                                     child: const Text(
                                       "Entrar",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
-                                      ),
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF3101B9)),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: const BorderSide(
-                                              color: Colors.white, width: 1),
-                                        ),
                                       ),
                                     ),
                                   ),
