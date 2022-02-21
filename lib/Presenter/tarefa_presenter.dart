@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:app_todo/Model/Api/apiDeleteTodo.dart';
 import 'package:app_todo/Model/Api/apiListagemTodo.dart';
 import 'package:app_todo/Model/Model_Geral.dart';
