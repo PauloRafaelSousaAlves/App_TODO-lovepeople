@@ -103,6 +103,4 @@ class DeleteItem {
       }
     });
   }
-
-  getLogin() {}
 }
